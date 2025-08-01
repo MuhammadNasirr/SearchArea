@@ -4,7 +4,6 @@ import {
     StyleSheet,
     Dimensions,
     Platform,
-    Text
 } from "react-native";
 import MapView, {
     Marker,
@@ -13,6 +12,11 @@ import MapView, {
 } from "react-native-maps";
 import 'react-native-get-random-values';
 import CustomPlacesSearch from "../../components/PlacesInput";
+import DetailsCard from "../../components/DetailsCard";
+import { PlaceDetails } from "../../utils/location";
+import HistoryModal from "../../components/HistoryModal";
+import { savePlaceToHistory } from "../../services/googleApi";
+import Header from "../../components/Header";
 
 const { width, height } = Dimensions.get("window");
 const ASPECT_RATIO = width / height;
@@ -28,6 +32,8 @@ const DEFAULT_REGION: Region = {
 
 const MapsScreen = () => {
     const mapRef = useRef<MapView>(null);
+    const [isHistoryVisible, setHistoryVisible] = useState<boolean>(false);
+    const [details, setDetails] = useState<{ name: string; formatted_address: string; geometry: { location: { lat: number; lng: number } }, place_id: string } | null>(null);
     const [markerPosition, setMarkerPosition] = useState<{
         latitude: number;
         longitude: number;
@@ -44,9 +50,19 @@ const MapsScreen = () => {
         setMarkerPosition({ latitude: lat, longitude: lng });
     };
 
+
+
+    // Called when a place is selected from the modal
+    const handleHistorySelect = (place: PlaceDetails) => {
+        setDetails(place);     // Set marker and show details
+        setMarkerPosition({ latitude: place.geometry.location.lat, longitude: place.geometry.location.lng });
+        animateToLocation(place.geometry.location.lat, place.geometry.location.lng);
+        savePlaceToHistory(place);   // Optional: refresh history order
+    };
+
     return (
         <SafeAreaView style={styles.container}>
-            <Text>ssss</Text>
+           <Header setHistoryVisible={setHistoryVisible} />
             <MapView
                 ref={mapRef}
                 style={styles.map}
@@ -63,12 +79,36 @@ const MapsScreen = () => {
 
             {/* Google Places Autocomplete Search */}
             <CustomPlacesSearch onPlaceSelect={(details) => {
+                setDetails({
+                    name: details.name,
+                    formatted_address: details.formatted_address,
+                    geometry: {
+                        location: {
+                            lat: details.geometry.location.lat,
+                            lng: details.geometry.location.lng,
+                        },
+                    },
+                    place_id: details.place_id,
+                });
                 const lat = details?.geometry?.location?.lat;
                 const lng = details?.geometry?.location?.lng;
                 if (lat && lng) {
                     animateToLocation(lat, lng);
                 }
             }} />
+
+            {details && (
+                <DetailsCard details={details} onClose={() => setDetails(null)} />
+            )}
+            {
+                isHistoryVisible && (
+                    <HistoryModal
+                        visible={isHistoryVisible}
+                        onClose={() => setHistoryVisible(false)}
+                        onSelect={handleHistorySelect}
+                    />
+                )
+            }
         </SafeAreaView>
     );
 };
@@ -93,6 +133,47 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         fontSize: 16,
         backgroundColor: "#fff",
+    },
+    info: {
+        position: "absolute",
+        width: "90%",
+        alignSelf: "center",
+        bottom: 20,
+        padding: 12,
+        backgroundColor: '#fff',
+        borderTopWidth: 1,
+        borderColor: '#eee',
+    },
+    title: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: '#333',
+    },
+    address: {
+        fontSize: 14,
+        color: '#666',
+        marginTop: 4,
+    },
+    label: {
+        fontWeight: 'bold',
+        color: '#444',
+        marginTop: 10,
+    },
+    value: {
+        color: '#222',
+        fontSize: 15,
+        marginTop: 2,
+    },
+    historyButton: {
+        backgroundColor: '#333',
+        padding: 12,
+        borderRadius: 6,
+        alignSelf: 'center',
+        marginVertical: 10,
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 16,
     },
 });
 

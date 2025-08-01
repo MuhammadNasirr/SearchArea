@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useState, useEffect } from 'react';
 import {
   View,
@@ -7,23 +8,11 @@ import {
   TouchableOpacity,
   StyleSheet,
   ActivityIndicator,
+  Keyboard,
 } from 'react-native';
+import { PlaceDetails, PlacePrediction } from '../utils/location';
+import { savePlaceToHistory } from '../services/googleApi';
 
-interface PlacePrediction {
-  place_id: string;
-  description: string;
-}
-
-interface PlaceDetails {
-  geometry: {
-    location: {
-      lat: number;
-      lng: number;
-    };
-  };
-  formatted_address: string;
-  name: string;
-}
 
 interface Props {
   onPlaceSelect: (place: PlaceDetails) => void;
@@ -35,6 +24,7 @@ const CustomPlacesSearch: React.FC<Props> = ({ onPlaceSelect }) => {
   const [query, setQuery] = useState<string>('');
   const [results, setResults] = useState<PlacePrediction[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [showList, setShowList] = useState<boolean>(false);
 
   useEffect(() => {
     if (query.length > 2) {
@@ -82,30 +72,44 @@ const CustomPlacesSearch: React.FC<Props> = ({ onPlaceSelect }) => {
     if (details) {
       onPlaceSelect(details);
       setQuery(item.description);
+      savePlaceToHistory(details);
       setResults([]);
+      setShowList(false);
+      // Optionally: dismiss keyboard
+      // Import at top: import { Keyboard } from 'react-native';
+      Keyboard.dismiss();
     }
   };
+
+  // In onChangeText:
+  const onChangeText = (text: string) => {
+    setQuery(text);
+    setShowList(true);
+  }
+
 
   return (
     <View style={styles.container}>
       <TextInput
         placeholder="Search for a place"
         value={query}
-        onChangeText={setQuery}
+        onChangeText={onChangeText}
         style={styles.input}
         placeholderTextColor="#666"
       />
       {loading && <ActivityIndicator size="small" />}
-      <FlatList
-        data={results}
-        keyExtractor={(item) => item.place_id}
-        renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => handleSelect(item)} style={styles.resultItem}>
-            <Text style={styles.resultText}>{item.description}</Text>
-          </TouchableOpacity>
-        )}
-        keyboardShouldPersistTaps="handled"
-      />
+      {showList && results.length > 0 && (
+        <FlatList
+          data={results}
+          keyExtractor={(item) => item.place_id}
+          renderItem={({ item }) => (
+            <TouchableOpacity onPress={() => handleSelect(item)} style={styles.resultItem}>
+              <Text style={styles.resultText}>{item.description}</Text>
+            </TouchableOpacity>
+          )}
+          keyboardShouldPersistTaps="handled"
+        />
+      )}
     </View>
   );
 };
@@ -115,9 +119,9 @@ const styles = StyleSheet.create({
     zIndex: 100,
     width: '90%',
     alignSelf: 'center',
-    marginTop: 40,
   },
   input: {
+    marginTop: 20,
     backgroundColor: '#fff',
     borderRadius: 6,
     paddingHorizontal: 12,
