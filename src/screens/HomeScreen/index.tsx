@@ -4,18 +4,15 @@ import {
     StyleSheet,
     Dimensions,
     Platform,
-    PermissionsAndroid,
-    View,
-    Alert,
-    ScrollView
+    Text
 } from "react-native";
 import MapView, {
     Marker,
     PROVIDER_GOOGLE,
     Region,
 } from "react-native-maps";
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import 'react-native-get-random-values';
+import CustomPlacesSearch from "../../components/PlacesInput";
 
 const { width, height } = Dimensions.get("window");
 const ASPECT_RATIO = width / height;
@@ -28,9 +25,6 @@ const DEFAULT_REGION: Region = {
     latitudeDelta: LATITUDE_DELTA,
     longitudeDelta: LONGITUDE_DELTA,
 };
-
-// ✅ Replace with your actual API Key
-const GOOGLE_API_KEY = "AIzaSyAb5qGxE7q2Bz5mXbGZZ1V0LRqOikwjBtI";
 
 const MapsScreen = () => {
     const mapRef = useRef<MapView>(null);
@@ -52,6 +46,7 @@ const MapsScreen = () => {
 
     return (
         <SafeAreaView style={styles.container}>
+            <Text>ssss</Text>
             <MapView
                 ref={mapRef}
                 style={styles.map}
@@ -67,78 +62,13 @@ const MapsScreen = () => {
             </MapView>
 
             {/* Google Places Autocomplete Search */}
-            <ScrollView keyboardShouldPersistTaps="always" contentContainerStyle={{ flex: 1 }}>
-                <GooglePlacesAutocomplete
-                    placeholder="Search for a place"
-                    keyboardShouldPersistTaps="always"
-                    // fetchDetails
-                    onFail={(e) => console.log('eee', e)}
-                    debounce={300}
-                    onPress={(data, details = null) => {
-                        const lat = details?.geometry.location.lat;
-                        const lng = details?.geometry.location.lng;
-                        if (lat && lng) {
-                            animateToLocation(lat, lng);
-                        }
-                    }}
-                    predefinedPlaces={[]}
-                    // minLength={2} 
-                    // autoFocus={false}
-                    fetchDetails={true}
-                    query={{
-                        key: "AIzaSyCDsEXCGdGUHqLKvf3T5u7cuJGoMzZjhb8",
-                        language: "en",
-                        type: '(cities)', // Specify the type of places to search
-                    }}
-                    styles={{
-                        container: {
-                            // position: "absolute",
-                            // zIndex: 100, // 🔥 REQUIRED for Android
-                            elevation: 10, // 🔥 REQUIRED for Android
-                            top: 40,
-                            width: "90%", alignSelf: "center"
-                        },
-                        textInput: {
-                            height: 44,
-                            backgroundColor: "#fff",
-                            borderRadius: 5,
-                            paddingHorizontal: 10
-                        },
-                        listView: {
-                            backgroundColor: 'white',
-                            // zIndex: 20000, // 🔥 to ensure dropdown is visible
-                            // elevation: 12,
-                        },
-                        description: {
-                            fontSize: 16,
-                            color: "#000",
-                        },
-                    }}
-                    textInputProps={{
-                        placeholderTextColor: "#666060ff",
-                        placeholder: "Search Location",
-                        onFocus: () => { }
-                    }}
-                    enablePoweredByContainer={false}
-                    currentLocation={false}
-                    currentLocationLabel="Current location"
-                    nearbyPlacesAPI="GooglePlacesSearch" // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
-                    GoogleReverseGeocodingQuery={
-                        {
-                            // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
-                        }
-                    }
-                    GooglePlacesDetailsQuery={{
-                        // available options for GooglePlacesDetails API : https://developers.google.com/places/web-service/details
-                        fields: 'formatted_address',
-                    }}
-                    filterReverseGeocodingByTypes={[
-                        'locality',
-                        'administrative_area_level_3',
-                    ]} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
-                    predefinedPlacesAlwaysVisible={!true}
-                />
-            </ScrollView>
+            <CustomPlacesSearch onPlaceSelect={(details) => {
+                const lat = details?.geometry?.location?.lat;
+                const lng = details?.geometry?.location?.lng;
+                if (lat && lng) {
+                    animateToLocation(lat, lng);
+                }
+            }} />
         </SafeAreaView>
     );
 };
