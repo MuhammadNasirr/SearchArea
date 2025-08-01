@@ -16,12 +16,9 @@ const HistoryModal = ({ visible, onClose, onSelect }: any) => {
     };
 
     return (
-        <SafeAreaView style={{ flex: 1 }}>
-            <TouchableOpacity onPress={onClose} style={{ padding: 20, alignItems: 'flex-end' }}>
-                <Text style={{ fontSize: 18, color: '#333' }}>Close</Text>
-            </TouchableOpacity>
-            <Modal visible={visible} animationType="slide">
-                <View style={styles.modalContainer}>
+        <Modal visible={visible} animationType="slide">
+            <View style={styles.modalContainer}>
+                <SafeAreaView style={{ flex: 1 }}>
                     <TouchableOpacity onPress={onClose} style={styles.closeBtn}><Text>Close</Text></TouchableOpacity>
                     <FlatList
                         data={history}
@@ -32,9 +29,9 @@ const HistoryModal = ({ visible, onClose, onSelect }: any) => {
                             </TouchableOpacity>
                         )}
                     />
-                </View>
-            </Modal>
-        </SafeAreaView>
+                </SafeAreaView>
+            </View>
+        </Modal>
     );
 };
 
