@@ -1,89 +1,120 @@
 # 📱 React Native Location Picker App
 
-This project is a React Native mobile application built using [`@react-native-community/cli`](https://github.com/react-native-community/cli). The app integrates **Google Maps & Places API** to allow users to search, view, and save location history in a clean, performant UI.
+A clean, responsive mobile app built with [**React Native**](https://reactnative.dev) and [`@react-native-community/cli`](https://github.com/react-native-community/cli).  
+This app integrates **Google Maps & Places API** to provide intuitive location search, display, and history tracking.
 
 ---
 
-## 🚀 Features
+## 🚀 Key Features
 
-- 🔍 Place search with Google Places Autocomplete API  
-- 🗺️ Interactive map with selected place marker  
-- 🧾 Display detailed place information (name, address, coordinates)  
-- 🕘 Maintains and persists location search history locally  
-- 💡 Smooth UI with animations and modal views  
-- 📦 Local storage using `AsyncStorage`  
+- 🔍 Real-time location search using **Google Places Autocomplete API**
+- 🗺️ Interactive **Google Map** with live marker updates
+- 🧾 Displays detailed information: **Place Name, Address, Latitude & Longitude**
+- 🕘 Maintains **local history of searched places** with persistent storage
+- 🎨 Smooth user experience with animations & custom modals
+- 💾 Efficient state management and local storage using **`AsyncStorage`**
 
 ---
 
 ## 🛠 Getting Started
 
-> **Prerequisites:** Follow the [React Native Environment Setup](https://reactnative.dev/docs/environment-setup) before proceeding.
+> ✅ **Before you begin:** Ensure your environment is configured according to the official [React Native setup guide](https://reactnative.dev/docs/environment-setup).
 
-### 📦 Install dependencies
+### 📦 Install Dependencies
 
 ```bash
+# Using npm
 npm install
-# or
-yarn install
 
-▶️ Running the App
-Step 1: Start Metro
-bash
-Copy
-Edit
+# OR using Yarn
+yarn install
+```
+
+---
+
+## ▶️ Running the Application
+
+### 1️⃣ Start Metro Server
+
+```bash
 npm start
 # or
 yarn start
-Step 2: Run on Android
-bash
-Copy
-Edit
+```
+
+### 2️⃣ Run on Android
+
+```bash
 npm run android
 # or
 yarn android
-Step 3: Run on iOS (macOS only)
-bash
-Copy
-Edit
+```
+
+### 3️⃣ Run on iOS (macOS Only)
+
+```bash
 cd ios
 bundle install
 bundle exec pod install
 cd ..
+
 npm run ios
 # or
 yarn ios
-✏️ Modifying the App
-Edit App.tsx or any component inside /components or /screens. Changes will auto-refresh via Fast Refresh.
+```
 
-🧪 Project Structure (Simplified)
-bash
-Copy
-Edit
-├── src/
-│   ├── components/
-│   │   ├── CustomPlacesSearch.tsx
-│   │   ├── DetailsCard.tsx
-│   │   └── HistoryModal.tsx
-│   ├── hooks/
-│   ├── utils/
-│   ├── assets/
-│   └── App.tsx
-├── android/
-├── ios/
-├── .env
-├── package.json
-└── README.md
-❗ Troubleshooting
-Check React Native Troubleshooting Guide for resolving common issues like build errors, Metro bundler failures, or device connectivity problems.
+> 📱 Once the app launches, any saved changes will auto-refresh via [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
 
-📚 Learn More
-React Native Documentation
+---
 
-Google Maps API
+## ✏️ Modify the App
 
-AsyncStorage Docs
+To get started with development, open `App.tsx` or explore the following key files:
 
-react-native-maps
+### 🧪 Simplified Project Structure
 
-🎉 Contributing
-Pull requests and feedback are welcome! For major changes, please open an issue first to discuss what you would like to change.
+```
+src/
+├── components/
+│   ├── CustomPlacesSearch.tsx
+│   ├── DetailsCard.tsx
+│   └── HistoryModal.tsx
+├── hooks/
+├── utils/
+├── assets/
+└── App.tsx
+
+android/
+ios/
+.env
+package.json
+README.md
+```
+
+---
+
+## ❗ Troubleshooting
+
+If you run into issues during development or build, refer to the [official troubleshooting guide](https://reactnative.dev/docs/troubleshooting).
+
+---
+
+## 📚 Useful Resources
+
+- 📘 [React Native Documentation](https://reactnative.dev)
+- 🌍 [Google Maps Places API](https://developers.google.com/maps/documentation/places/web-service/overview)
+- 💾 [AsyncStorage Docs](https://react-native-async-storage.github.io/async-storage/)
+- 🗺️ [react-native-maps](https://github.com/react-native-maps/react-native-maps)
+
+---
+
+## 🤝 Contributing
+
+Contributions, suggestions, and pull requests are welcome!  
+If proposing major changes, please open an issue first to discuss your ideas.
+
+---
+
+## 📝 License
+
+This project is licensed under the **MIT License** — feel free to use it for your own apps.
